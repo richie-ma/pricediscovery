@@ -1,0 +1,27 @@
+Package: pricediscovery
+Type: Package
+Title: Hasbrouck (1995) Price Discovery Analysis
+Version: 0.1.1
+Authors@R: 
+    person("Richie", "Ma", email = "ruchuan2@illinois.edu", role = c("aut", "cre"))
+Description: Provides tools for resampling financial data and conducting price discovery analysis
+    based on Hasbrouck's (1995) one-security-many-markets framework.
+URL: https://github.com/richie-ma/pricediscovery
+License: GPL (>= 3)
+Depends:
+    R (>= 3.5.0)
+Imports:
+    data.table,
+    highfrequency,
+    tsDyn,
+    vars,
+    combinat,
+    urca,
+    stats,
+    ggplot2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.3
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
