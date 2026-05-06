@@ -39,92 +39,43 @@ relationship.
 You can install the development version of pricediscovery like so:
 
 ``` r
-install.packages("devtools")
+#install.packages("devtools")
 devtools::install_github("richie-ma/pricediscovery")
+#> Warning: `install_github()` was deprecated in devtools 2.5.0.
+#> ℹ Please use pak::pak("user/repo") instead.
+#> This warning is displayed once per session.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
+#> Using GitHub PAT from the git credential store.
+#> Downloading GitHub repo richie-ma/pricediscovery@HEAD
+#> cpp11      (0.5.4    -> 0.5.5 ) [CRAN]
+#> data.table (1.18.2.1 -> 1.18.4) [CRAN]
+#> Installing 2 packages: cpp11, data.table
+#> Installing packages into 'C:/Users/ruchuan2/AppData/Local/Temp/RtmpgFiTZM/temp_libpath5130362f547b'
+#> (as 'lib' is unspecified)
+#> 
+#>   There are binary versions available but the source versions are later:
+#>              binary source needs_compilation
+#> cpp11         0.5.4  0.5.5             FALSE
+#> data.table 1.18.2.1 1.18.4              TRUE
+#> installing the source packages 'cpp11', 'data.table'
+#> ── R CMD build ─────────────────────────────────────────────────────────────────
+#>          checking for file 'C:\Users\ruchuan2\AppData\Local\Temp\RtmpKoLeXG\remotes284c51d314c\richie-ma-pricediscovery-509100e/DESCRIPTION' ...  ✔  checking for file 'C:\Users\ruchuan2\AppData\Local\Temp\RtmpKoLeXG\remotes284c51d314c\richie-ma-pricediscovery-509100e/DESCRIPTION' (532ms)
+#>       ─  preparing 'pricediscovery':
+#>    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   ✔  checking DESCRIPTION meta-information
+#>       ─  checking for LF line-endings in source and make files and shell scripts (425ms)
+#>       ─  checking for empty or unneeded directories
+#>      Omitted 'LazyData' from DESCRIPTION
+#>       ─  building 'pricediscovery_0.1.1.tar.gz'
+#>      
+#> 
+#> Installing package into 'C:/Users/ruchuan2/AppData/Local/Temp/RtmpgFiTZM/temp_libpath5130362f547b'
+#> (as 'lib' is unspecified)
 library(pricediscovery)
+#> Registered S3 method overwritten by 'quantmod':
+#>   method            from
+#>   as.zoo.data.frame zoo
 ```
-
-## Methodology
-
-Taking bi-variable setting as an example. We have a price return vector
-$\Delta \mathbf{p}_{t}$.
-
-$$\Delta \mathbf{p}_{t}=\mathbf{\alpha}z_{t-1}+\mathbf{B}_1\Delta \mathbf{p}_{t-1}+\mathbf{B}_2\Delta \mathbf{p}_{t-2}+\cdots+\mathbf{B}_M\Delta \mathbf{p}_{t-M}+\mathbf{\varepsilon}_{t},$$
-where
-$\Delta \mathbf{p}_{t}=\left[\Delta p_{1,t},\Delta p_{2,t}\right]^{\prime}$
-and $\mathbf{B}_i\in\mathbb{R}^{2\times2}$ denotes the coefficient
-matrix associated with lag $i$. The error-correction term is set to
-$z_{t-1}=\left(p_{1,t-1}-p_{2,t-1}-\mu\right)$. In price discovery
-analysis, the normalized cointegrating vector is set to
-$\left[1, -1\right]^{\prime}$, ensuring that all price series share a
-common efficient price. This is important to calculate Hasbrouck
-(1995)’s information shares. $\mathbf{\alpha}\in \mathbb{R}^{2\times 1}$
-represents the adjustment coefficient matrix, indicating the speed at
-which each market adjusts to deviations from the long-run cointegrating
-relationship. $\bm{\varepsilon}_{t}$ represents a vector of error terms
-with zero mean and variance–covariance matrix $\bm{\Omega}$.
-
-To extract the common efficient price, Hasbrouck (1995) transforms the
-VECM into a vector moving-average (VMA) process:
-
-$$\Delta\mathbf{p}_{t}=\mathbf{\Psi}(L)\varepsilon_{t}=\mathbf{\Psi}_0\mathbf{\varepsilon}_{t}+\mathbf{\Psi}_1\mathbf{\varepsilon}_{t-1}+\mathbf{\Psi}_2\mathbf{\varepsilon}_{t-2}+\cdots,$$
-where $\mathbf{\Psi}(L)$ denotes the polynomial of the lag operator.
-Here,
-$\mathbf{\Psi}(L)=\mathbf{\Psi}_0+\mathbf{\Psi}_1(L)+\mathbf{\Psi}_2(L^2)+\cdots$.
-Hasbrouck (1995) demonstrates that all rows of $\mathbf{\Psi}(1)$ are
-identical, given the normalized cointegrating vector is set to
-$\left[1, -1\right]^{\prime}$, ensuring each price reflects the same
-long-run efficient price. We denote the variance of the common efficient
-price returns as
-$\mathsf{Var}(\mathbf{\psi}\mathbf{\varepsilon}_{t})=\mathbf{\psi\Omega\psi^{\prime}}$,
-where $\mathbf{\psi}=\left(\psi_{1}, \psi_{2}\right)$ is a common row
-vector of $\mathbf{\Psi}(1)$. This step can be calculated through
-cumulative impulse response functions (IRFs) up to a step at which the
-cumulative IRFs are stabilized. This package applies such practice.
-
-Gonzalo and Granger (1995) derive the component share ($CS$) based on a
-permanent-transitory framework. It is calculated by normalized weights
-of each market in the common efficient price:
-
-$$    CS_i=\frac{\psi_i}{\sum_{i} \psi_{i}}.$$
-
-Hasbrouck (1995)’s information share ($IS$) is defined as the proportion
-of variance in the efficient price attributed to each price series:
-
-$$    IS_{i}=\frac{\psi_{i}^2\mathbf{\Omega}_{ii}}{\mathbf{\psi\Omega\psi^{\prime}}},$$
-where $\mathbf{\Omega_{ii}}$ is the $i$-th diagonal element of
-variance–covariance matrix $\mathbf{\Omega}$. Considering that
-$\mathbf{\Omega}$ is often non-diagonal and price innovations are
-correlated across markets, Hasbrouck (1995) applies a Cholesky
-factorization to $\mathbf{\Omega}$ such that
-$\mathbf{\Omega}=\mathbf{MM^{\prime}}$ to eliminate contemporaneous
-correlations. Thus, the $IS$ measure can be expressed as
-
-$$    IS_{i}=\frac{\left(\left[\psi\mathbf{M}\right]_{i}\right)^{2}}{\mathbf{\psi\Omega\psi^{\prime}}}.$$
-However, the factorization does not derive a unique $IS$ measure, which
-is dependent on the ordering of prices in the VECM. We thus calculate
-the average $IS$ by taking all possible orderings, which is common
-practice in the literature (Baillie et al. 2002). Each $IS$ measure lies
-in the range between 0 and 1, and together they sum to one.
-
-Yan and Zivot (2010) document that both the $IS$ and $CS$ measures are
-adequate to capture timeliness only when market prices exhibit similar
-noise levels because they tend to be biased toward the market with less
-noise but potentially more staleness. Putniņš (2013) suggests that the
-inconsistency of the two perspectives is likely to be more pronounced in
-analyses between different types of markets (e.g., electronic vs. pits)
-or different asset classes (e.g., futures vs. options). Overall, the
-$IS$ and $CS$ are more reliable measures for assessing price discovery
-from the perspective of efficiency instead of timeliness.
-
-To measure the timeliness of price discovery, Putniņš (2013) proposes an
-information leadership share ($ILS$) based on Yan and Zivot (2010),
-which mitigates the influence of noise when capturing timeliness:
-
-$$ILS_{i}=\frac{\left| \frac{IS_i}{IS_{-i}}\cdot\frac{CS_{-i}}{CS_{i}} \right|}{\left| \frac{IS_i}{IS_{-i}}\cdot\frac{CS_{-i}}{CS_{i}} \right|+\left| \frac{IS_{-i}}{IS_{i}}\cdot\frac{CS_{i}}{CS_{-i}} \right|}.$$
-Each $ILS$ also lies in the range $\left[0,1\right]$, and together they
-sum to one. We use $ILS$s to measure which market is the first to
-incorporate information.\\
 
 ## Example
 
@@ -137,41 +88,58 @@ Bitfinex on January 5, 2026.
 Let’s resample every market data to 1-second frequency and then merge
 all together.
 
-    library(pricediscovery)
-    ### using the test datasets
+``` r
 
-    library(ggplot2)
+### using the test datasets
+library(ggplot2)
 
-    kraken <- readRDS(testthat::test_path("btcusd_kraken.rds"))[, .(time, kraken=price)]
-    gemini <- readRDS(testthat::test_path("btcusd_gemini.rds"))[, .(time, gemini=price)]
-    coinbase <- readRDS(testthat::test_path("btcusd_coinbase.rds"))[, .(time, coinbase=price)]
-    bitstamp <- readRDS(testthat::test_path("btcusd_bitstamp.rds"))[, .(time, bitstamp=price)]
-    bitfinex <- readRDS(testthat::test_path("btcusd_bitfinex.rds"))[, .(time, bitfinex=price)]
+kraken <- readRDS(testthat::test_path("btcusd_kraken.rds"))[, .(time, kraken=price)]
+gemini <- readRDS(testthat::test_path("btcusd_gemini.rds"))[, .(time, gemini=price)]
+coinbase <- readRDS(testthat::test_path("btcusd_coinbase.rds"))[, .(time, coinbase=price)]
+bitstamp <- readRDS(testthat::test_path("btcusd_bitstamp.rds"))[, .(time, bitstamp=price)]
+bitfinex <- readRDS(testthat::test_path("btcusd_bitfinex.rds"))[, .(time, bitfinex=price)]
 
-    mkt_data <- list(kraken = resample(kraken, 'time', 'secs', 1, "00:00:00", "23:59:59"), 
-                     gemini = resample(gemini, 'time', 'secs', 1, "00:00:00", "23:59:59"), 
-                     coinbase = resample(coinbase, 'time', 'secs', 1, "00:00:00", "23:59:59"), 
-                     bitstamp = resample(bitstamp, 'time', 'secs', 1, "00:00:00", "23:59:59"), 
-                     bitfinex = resample(bitfinex, 'time', 'secs', 1, "00:00:00", "23:59:59"))
+mkt_data <- list(kraken = resample(kraken, 'time', 'secs', 1, "00:00:00", "23:59:59"), 
+                 gemini = resample(gemini, 'time', 'secs', 1, "00:00:00", "23:59:59"), 
+                 coinbase = resample(coinbase, 'time', 'secs', 1, "00:00:00", "23:59:59"), 
+                 bitstamp = resample(bitstamp, 'time', 'secs', 1, "00:00:00", "23:59:59"), 
+                 bitfinex = resample(bitfinex, 'time', 'secs', 1, "00:00:00", "23:59:59"))
 
-    mkt_data_1s <- Reduce(
-      function(x, y) merge(x, y, by = "DT"),
-      mkt_data
-    )
+mkt_data_1s <- Reduce(
+  function(x, y) merge(x, y, by = "DT"),
+  mkt_data
+)
 
-    mkt_data_1s
+mkt_data_1s
+#> Key: <DT>
+#>                         DT  KRAKEN   GEMINI COINBASE BITSTAMP BITFINEX
+#>                     <POSc>   <num>    <num>    <num>    <num>    <num>
+#>     1: 2026-01-05 00:00:00 91507.0 91493.73 91489.03    91498    91463
+#>     2: 2026-01-05 00:00:01 91507.0 91493.73 91488.63    91498    91463
+#>     3: 2026-01-05 00:00:02 91507.0 91493.73 91489.73    91498    91463
+#>     4: 2026-01-05 00:00:03 91507.0 91493.73 91486.62    91494    91463
+#>     5: 2026-01-05 00:00:04 91507.0 91493.73 91503.93    91499    91463
+#>    ---                                                                
+#> 86396: 2026-01-05 23:59:55 93866.9 93866.06 93870.07    93877    93758
+#> 86397: 2026-01-05 23:59:56 93866.9 93866.06 93870.07    93876    93756
+#> 86398: 2026-01-05 23:59:57 93866.9 93866.06 93870.07    93876    93756
+#> 86399: 2026-01-05 23:59:58 93866.9 93866.06 93870.07    93876    93756
+#> 86400: 2026-01-05 23:59:59 93866.9 93866.06 93870.06    93876    93756
 
-    ggplot(data = mkt_data_1s, aes( x = DT))+
-      geom_line(aes(y = KRAKEN, color='KRAKEN'))+
-      geom_line(aes(y = GEMINI, color='GEMINI'))+
-      geom_line(aes(y = COINBASE, color='COINBASE'))+
-      geom_line(aes(y = BITSTAMP, color='BITSTAMP'))+
-      geom_line(aes(y = BITFINEX, color='BITFINEX'))+
-      labs(
-        x = "Time",
-        y = "Price",
-        color = "Market"
-      )
+ggplot(data = mkt_data_1s, aes( x = DT))+
+  geom_line(aes(y = KRAKEN, color='KRAKEN'))+
+  geom_line(aes(y = GEMINI, color='GEMINI'))+
+  geom_line(aes(y = COINBASE, color='COINBASE'))+
+  geom_line(aes(y = BITSTAMP, color='BITSTAMP'))+
+  geom_line(aes(y = BITFINEX, color='BITFINEX'))+
+  labs(
+    x = "Time",
+    y = "Price",
+    color = "Market"
+  )
+```
+
+<img src="man/figures/README-unnamed-chunk-3-1.png" alt="" width="100%" />
 
 One can see that prices in the five markets are close to each other and
 move together, suggesting that there should not be persistent deviations
@@ -184,6 +152,7 @@ SC with maximum lag 60, corresponding to 1 minute. In long-run
 equilibrium, I add a constant term to account for the price level
 differences between them. I use the standard cointgrating beta which is
 set to
+
 $$\begin{bmatrix}
 1 & -1 & 0 & 0& 0\\
 1 & 0 & -1 & 0& 0\\
@@ -206,7 +175,11 @@ price_discovery_measures <- price_discovery(mkt_data_1s,
                                             coin_const = TRUE,
                                             coin_beta = TRUE)
 price_discovery_measures                                             
-                                            
+#>        KRAKEN      GEMINI   COINBASE   BITSTAMP   BITFINEX   type
+#>         <num>       <num>      <num>      <num>      <num> <char>
+#> 1: 0.02714113 0.016423008 0.62937209 0.07165127 0.25541250     IS
+#> 2: 0.06016415 0.115946639 0.02385562 0.77070333 0.02933026    ILS
+#> 3: 0.01905584 0.008306015 0.70174812 0.01405560 0.25683443     CS
 ```
 
 I find that
@@ -231,14 +204,6 @@ I find that
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-Baillie2002" class="csl-entry">
-
-Baillie, R. T., G. G. Booth, Y. Tse, and T. Zabotina. 2002. “Price
-Discovery and Common Factor Models.” *Journal of Financial Markets* 5:
-309–21.
-
-</div>
-
 <div id="ref-Gonzalo1995" class="csl-entry">
 
 Gonzalo, J., and C. Granger. 1995. “Estimation of Common Long-Memory
@@ -258,13 +223,6 @@ Contributions to Price Discovery.” *Journal of Finance* 50: 1175–99.
 
 Putniņš, T. J. 2013. “What Do Price Discovery Metrics Really Measure?”
 *Journal of Empirical Finance* 23: 68–83.
-
-</div>
-
-<div id="ref-Yan2010" class="csl-entry">
-
-Yan, B., and E. Zivot. 2010. “A Structural Analysis of Price Discovery
-Measures.” *Journal of Financial Markets* 13: 1–19.
 
 </div>
 
