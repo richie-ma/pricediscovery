@@ -5,6 +5,7 @@ vignette: >
   %\VignetteIndexEntry{methodology}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: ../inst/references.bib
 ---
 
 ```{r, include = FALSE}
@@ -20,7 +21,7 @@ Taking bi-variable setting as an example. We have a price return vector $\Delta 
 $$
   \Delta \mathbf{p}_{t}=\mathbf{\alpha}z_{t-1}+\mathbf{B}_1\Delta \mathbf{p}_{t-1}+\mathbf{B}_2\Delta \mathbf{p}_{t-2}+\cdots+\mathbf{B}_M\Delta \mathbf{p}_{t-M}+\mathbf{\varepsilon}_{t},
 $$
-where $\Delta \mathbf{p}_{t}=\left[\Delta p_{1,t},\Delta p_{2,t}\right]^{\prime}$ and $\mathbf{B}_i\in\mathbb{R}^{2\times2}$ denotes the coefficient matrix associated with lag $i$. The error-correction term is set to $z_{t-1}=\left(p_{1,t-1}-p_{2,t-1}-\mu\right)$. In price discovery analysis, the normalized cointegrating vector is set to $\left[1, -1\right]^{\prime}$, ensuring that all price series share a common efficient price. This is important to calculate @Hasbrouck1995's information shares. $\mathbf{\alpha}\in \mathbb{R}^{2\times 1}$ represents the adjustment coefficient matrix, indicating the speed at which each market adjusts to deviations from the long-run cointegrating relationship. $\bm{\varepsilon}_{t}$ represents a vector of error terms with zero mean and variance--covariance matrix $\bm{\Omega}$.
+where $\Delta \mathbf{p}_{t}=\left[\Delta p_{1,t},\Delta p_{2,t}\right]^{\prime}$ and $\mathbf{B}_i\in\mathbb{R}^{2\times2}$ denotes the coefficient matrix associated with lag $i$. The error-correction term is set to $z_{t-1}=\left(p_{1,t-1}-p_{2,t-1}-\mu\right)$. In price discovery analysis, the normalized cointegrating vector is set to $\left[1, -1\right]^{\prime}$, ensuring that all price series share a common efficient price. This is important to calculate @Hasbrouck1995's information shares. $\mathbf{\alpha}\in \mathbb{R}^{2\times 1}$ represents the adjustment coefficient matrix, indicating the speed at which each market adjusts to deviations from the long-run cointegrating relationship. $\mathbf{\varepsilon}_{t}$ represents a vector of error terms with zero mean and variance--covariance matrix $\mathbf{\Omega}$.
 
 \indent To extract the common efficient price, @Hasbrouck1995 transforms the VECM into a vector moving-average (VMA) process:
 
@@ -56,7 +57,7 @@ $$
   ILS_{i}=\frac{\left| \frac{IS_i}{IS_{-i}}\cdot\frac{CS_{-i}}{CS_{i}} \right|}{\left| \frac{IS_i}{IS_{-i}}\cdot\frac{CS_{-i}}{CS_{i}} \right|+\left| \frac{IS_{-i}}{IS_{i}}\cdot\frac{CS_{i}}{CS_{-i}} \right|}.
 $$
 
-Each $ILS$ also lies in the range $\left[0,1\right]$, and together they sum to one. We use $ILS$s to measure which market is the first to incorporate information.\\
+Each $ILS$ also lies in the range $\left[0,1\right]$, and together they sum to one. We use $ILS$s to measure which market is the first to incorporate information.
 
 
 ## References
