@@ -42,28 +42,33 @@ library(pricediscovery)
 ```
 
 ## Methodology
-Taking bi-variable setting as an example. We have a price return vector $\Delta \mathbf{p}_{t}$
+Taking bi-variable setting as an example. We have a price return vector $\Delta \mathbf{p}_{t}$.
+
 $$
 \Delta \mathbf{p}_{t}=\mathbf{\alpha}z_{t-1}+\mathbf{B}_1\Delta \mathbf{p}_{t-1}+\mathbf{B}_2\Delta \mathbf{p}_{t-2}+\cdots+\mathbf{B}_M\Delta \mathbf{p}_{t-M}+\mathbf{\varepsilon}_{t},
 $$
 where $\Delta \mathbf{p}_{t}=\left[\Delta p_{1,t},\Delta p_{2,t}\right]^{\prime}$ and $\mathbf{B}_i\in\mathbb{R}^{2\times2}$ denotes the coefficient matrix associated with lag $i$. The error-correction term is set to $z_{t-1}=\left(p_{1,t-1}-p_{2,t-1}-\mu\right)$. In price discovery analysis, the normalized cointegrating vector is set to $\left[1, -1\right]^{\prime}$, ensuring that all price series share a common efficient price. This is important to calculate @Hasbrouck1995's information shares. $\mathbf{\alpha}\in \mathbb{R}^{2\times 1}$ represents the adjustment coefficient matrix, indicating the speed at which each market adjusts to deviations from the long-run cointegrating relationship. $\bm{\varepsilon}_{t}$ represents a vector of error terms with zero mean and variance--covariance matrix $\bm{\Omega}$.
 
 \indent To extract the common efficient price, @Hasbrouck1995 transforms the VECM into a vector moving-average (VMA) process:
+
 $$
 \Delta\mathbf{p}_{t}=\mathbf{\Psi}(L)\varepsilon_{t}=\mathbf{\Psi}_0\mathbf{\varepsilon}_{t}+\mathbf{\Psi}_1\mathbf{\varepsilon}_{t-1}+\mathbf{\Psi}_2\mathbf{\varepsilon}_{t-2}+\cdots,
 $$
 where $\mathbf{\Psi}(L)$ denotes the polynomial of the lag operator. Here, $\mathbf{\Psi}(L)=\mathbf{\Psi}_0+\mathbf{\Psi}_1(L)+\mathbf{\Psi}_2(L^2)+\cdots$. @Hasbrouck1995 demonstrates that all rows of $\mathbf{\Psi}(1)$ are identical, given the normalized cointegrating vector is set to $\left[1, -1\right]^{\prime}$, ensuring each price reflects the same long-run efficient price. We denote the variance of the common efficient price returns as $\mathsf{Var}(\mathbf{\psi}\mathbf{\varepsilon}_{t})=\mathbf{\psi\Omega\psi^{\prime}}$, where $\mathbf{\psi}=\left(\psi_{1}, \psi_{2}\right)$ is a common row vector of $\mathbf{\Psi}(1)$. This step can be calculated through cumulative impulse response functions (IRFs) up to a step at which the cumulative IRFs are stabilized. This package applies such practice.
 
 @Gonzalo1995 derive the component share ($CS$) based on a permanent-transitory framework. It is calculated by normalized weights of each market in the common efficient price:
+
 $$
     CS_i=\frac{\psi_i}{\sum_{i} \psi_{i}}.
 $$
 
 @Hasbrouck1995's information share ($IS$) is defined as the proportion of variance in the efficient price attributed to each price series:
+
 $$
     IS_{i}=\frac{\psi_{i}^2\mathbf{\Omega}_{ii}}{\mathbf{\psi\Omega\psi^{\prime}}},
 $$
 where $\mathbf{\Omega_{ii}}$ is the $i$-th diagonal element of variance--covariance matrix $\mathbf{\Omega}$. Considering that $\mathbf{\Omega}$ is often non-diagonal and price innovations are correlated across markets, @Hasbrouck1995 applies a Cholesky factorization to $\mathbf{\Omega}$ such that $\mathbf{\Omega}=\mathbf{MM^{\prime}}$ to eliminate contemporaneous correlations. Thus, the $IS$ measure can be expressed as
+
 $$
     IS_{i}=\frac{\left(\left[\psi\mathbf{M}\right]_{i}\right)^{2}}{\mathbf{\psi\Omega\psi^{\prime}}}.
 $$
@@ -72,6 +77,7 @@ However, the factorization does not derive a unique $IS$ measure, which is depen
 @Yan2010 document that both the $IS$ and $CS$ measures are adequate to capture timeliness only when market prices exhibit similar noise levels because they tend to be biased toward the market with less noise but potentially more staleness. @Putnins2013 suggests that the inconsistency of the two perspectives is likely to be more pronounced in analyses between different types of markets (e.g., electronic vs. pits) or different asset classes (e.g., futures vs. options). Overall, the $IS$ and $CS$ are more reliable measures for assessing price discovery from the perspective of efficiency instead of timeliness.
 
 \indent To measure the timeliness of price discovery, @Putnins2013 proposes an information leadership share ($ILS$) based on @Yan2010, which mitigates the influence of noise when capturing timeliness:
+
 $$
 ILS_{i}=\frac{\left| \frac{IS_i}{IS_{-i}}\cdot\frac{CS_{-i}}{CS_{i}} \right|}{\left| \frac{IS_i}{IS_{-i}}\cdot\frac{CS_{-i}}{CS_{i}} \right|+\left| \frac{IS_{-i}}{IS_{i}}\cdot\frac{CS_{i}}{CS_{-i}} \right|}.
 $$
@@ -160,7 +166,7 @@ I find that
 
 - CS typically shows a similar pattern as ILS.
 
-
+## References
 
 
 

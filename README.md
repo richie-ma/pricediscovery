@@ -47,7 +47,8 @@ library(pricediscovery)
 ## Methodology
 
 Taking bi-variable setting as an example. We have a price return vector
-$\Delta \mathbf{p}_{t}$
+$\Delta \mathbf{p}_{t}$.
+
 $$\Delta \mathbf{p}_{t}=\mathbf{\alpha}z_{t-1}+\mathbf{B}_1\Delta \mathbf{p}_{t-1}+\mathbf{B}_2\Delta \mathbf{p}_{t-2}+\cdots+\mathbf{B}_M\Delta \mathbf{p}_{t-M}+\mathbf{\varepsilon}_{t},$$
 where
 $\Delta \mathbf{p}_{t}=\left[\Delta p_{1,t},\Delta p_{2,t}\right]^{\prime}$
@@ -65,6 +66,7 @@ with zero mean and variance–covariance matrix $\bm{\Omega}$.
 
 To extract the common efficient price, Hasbrouck (1995) transforms the
 VECM into a vector moving-average (VMA) process:
+
 $$\Delta\mathbf{p}_{t}=\mathbf{\Psi}(L)\varepsilon_{t}=\mathbf{\Psi}_0\mathbf{\varepsilon}_{t}+\mathbf{\Psi}_1\mathbf{\varepsilon}_{t-1}+\mathbf{\Psi}_2\mathbf{\varepsilon}_{t-2}+\cdots,$$
 where $\mathbf{\Psi}(L)$ denotes the polynomial of the lag operator.
 Here,
@@ -83,10 +85,12 @@ cumulative IRFs are stabilized. This package applies such practice.
 Gonzalo and Granger (1995) derive the component share ($CS$) based on a
 permanent-transitory framework. It is calculated by normalized weights
 of each market in the common efficient price:
+
 $$    CS_i=\frac{\psi_i}{\sum_{i} \psi_{i}}.$$
 
 Hasbrouck (1995)’s information share ($IS$) is defined as the proportion
 of variance in the efficient price attributed to each price series:
+
 $$    IS_{i}=\frac{\psi_{i}^2\mathbf{\Omega}_{ii}}{\mathbf{\psi\Omega\psi^{\prime}}},$$
 where $\mathbf{\Omega_{ii}}$ is the $i$-th diagonal element of
 variance–covariance matrix $\mathbf{\Omega}$. Considering that
@@ -95,6 +99,7 @@ correlated across markets, Hasbrouck (1995) applies a Cholesky
 factorization to $\mathbf{\Omega}$ such that
 $\mathbf{\Omega}=\mathbf{MM^{\prime}}$ to eliminate contemporaneous
 correlations. Thus, the $IS$ measure can be expressed as
+
 $$    IS_{i}=\frac{\left(\left[\psi\mathbf{M}\right]_{i}\right)^{2}}{\mathbf{\psi\Omega\psi^{\prime}}}.$$
 However, the factorization does not derive a unique $IS$ measure, which
 is dependent on the ordering of prices in the VECM. We thus calculate
@@ -115,6 +120,7 @@ from the perspective of efficiency instead of timeliness.
 To measure the timeliness of price discovery, Putniņš (2013) proposes an
 information leadership share ($ILS$) based on Yan and Zivot (2010),
 which mitigates the influence of noise when capturing timeliness:
+
 $$ILS_{i}=\frac{\left| \frac{IS_i}{IS_{-i}}\cdot\frac{CS_{-i}}{CS_{i}} \right|}{\left| \frac{IS_i}{IS_{-i}}\cdot\frac{CS_{-i}}{CS_{i}} \right|+\left| \frac{IS_{-i}}{IS_{i}}\cdot\frac{CS_{i}}{CS_{-i}} \right|}.$$
 Each $ILS$ also lies in the range $\left[0,1\right]$, and together they
 sum to one. We use $ILS$s to measure which market is the first to
@@ -133,6 +139,8 @@ all together.
 
     library(pricediscovery)
     ### using the test datasets
+
+    library(ggplot2)
 
     kraken <- readRDS(testthat::test_path("btcusd_kraken.rds"))[, .(time, kraken=price)]
     gemini <- readRDS(testthat::test_path("btcusd_gemini.rds"))[, .(time, gemini=price)]
@@ -218,6 +226,8 @@ I find that
   discovery might not occur in the same market.
 
 - CS typically shows a similar pattern as ILS.
+
+## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
