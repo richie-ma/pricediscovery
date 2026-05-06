@@ -34,6 +34,14 @@ regulators, to understand the dynamics of market microstructure. This is
 also helpful for intraday arbitragers to understand better for lead-lag
 relationship.
 
+## Methodology
+
+For full methodological details, see the package vignette:
+
+``` r
+vignette("methodology", package = "pricediscovery")
+```
+
 ## Installation
 
 You can install the development version of pricediscovery like so:
@@ -41,40 +49,7 @@ You can install the development version of pricediscovery like so:
 ``` r
 #install.packages("devtools")
 devtools::install_github("richie-ma/pricediscovery")
-#> Warning: `install_github()` was deprecated in devtools 2.5.0.
-#> ℹ Please use pak::pak("user/repo") instead.
-#> This warning is displayed once per session.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
-#> Using GitHub PAT from the git credential store.
-#> Downloading GitHub repo richie-ma/pricediscovery@HEAD
-#> cpp11      (0.5.4    -> 0.5.5 ) [CRAN]
-#> data.table (1.18.2.1 -> 1.18.4) [CRAN]
-#> Installing 2 packages: cpp11, data.table
-#> Installing packages into 'C:/Users/ruchuan2/AppData/Local/Temp/RtmpgFiTZM/temp_libpath5130362f547b'
-#> (as 'lib' is unspecified)
-#> 
-#>   There are binary versions available but the source versions are later:
-#>              binary source needs_compilation
-#> cpp11         0.5.4  0.5.5             FALSE
-#> data.table 1.18.2.1 1.18.4              TRUE
-#> installing the source packages 'cpp11', 'data.table'
-#> ── R CMD build ─────────────────────────────────────────────────────────────────
-#>          checking for file 'C:\Users\ruchuan2\AppData\Local\Temp\RtmpKoLeXG\remotes284c51d314c\richie-ma-pricediscovery-509100e/DESCRIPTION' ...  ✔  checking for file 'C:\Users\ruchuan2\AppData\Local\Temp\RtmpKoLeXG\remotes284c51d314c\richie-ma-pricediscovery-509100e/DESCRIPTION' (532ms)
-#>       ─  preparing 'pricediscovery':
-#>    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   ✔  checking DESCRIPTION meta-information
-#>       ─  checking for LF line-endings in source and make files and shell scripts (425ms)
-#>       ─  checking for empty or unneeded directories
-#>      Omitted 'LazyData' from DESCRIPTION
-#>       ─  building 'pricediscovery_0.1.1.tar.gz'
-#>      
-#> 
-#> Installing package into 'C:/Users/ruchuan2/AppData/Local/Temp/RtmpgFiTZM/temp_libpath5130362f547b'
-#> (as 'lib' is unspecified)
 library(pricediscovery)
-#> Registered S3 method overwritten by 'quantmod':
-#>   method            from
-#>   as.zoo.data.frame zoo
 ```
 
 ## Example
@@ -92,7 +67,10 @@ all together.
 
 ### using the test datasets
 library(ggplot2)
-
+library(pricediscovery)
+#> Registered S3 method overwritten by 'quantmod':
+#>   method            from
+#>   as.zoo.data.frame zoo
 kraken <- readRDS(testthat::test_path("btcusd_kraken.rds"))[, .(time, kraken=price)]
 gemini <- readRDS(testthat::test_path("btcusd_gemini.rds"))[, .(time, gemini=price)]
 coinbase <- readRDS(testthat::test_path("btcusd_coinbase.rds"))[, .(time, coinbase=price)]
@@ -139,7 +117,7 @@ ggplot(data = mkt_data_1s, aes( x = DT))+
   )
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
 
 One can see that prices in the five markets are close to each other and
 move together, suggesting that there should not be persistent deviations
@@ -186,12 +164,12 @@ I find that
 
 - In terms of efficiency, measuring which market price is more
   informative about common efficient price: Coinbase contributes the
-  most to the common efficient price with information shares ($IS$s)
+  most to the common efficient price with information shares (ISs)
   reaching to 65.94%, followed by Bitfinex (25.54%) and Bitstamp
   (7.17%).
 
 - In terms of timeliness, measuring which market incorporates the new
-  information faster: Based on information leadership shares ($ILS$s),
+  information faster: Based on information leadership shares (ILSs),
   Bitstamp is the first one to incorporate new information into prices,
   followed by Gemini, and Kraken.
 

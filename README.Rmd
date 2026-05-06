@@ -31,11 +31,18 @@ This package also helps to resample the price series. Raw financial data might b
 ## Background
 Financial price discovery characterizes how information is incorporated into the fundamental values and many studies have suggested this process across multiple venues. The price discovery happens when the same security is traded among different venues, such as E-mini S&P 500 futures and SPY, the ETF. Knowing which market is informative to price formation process is important for market participants, especially for regulators, to understand the dynamics of market microstructure. This is also helpful for intraday arbitragers to understand better for lead-lag relationship. 
 
+## Methodology
+For full methodological details, see the package vignette:
+
+```r
+vignette("methodology", package = "pricediscovery")
+```
+
 ## Installation
 
 You can install the development version of pricediscovery like so:
 
-```{r}
+```r
 #install.packages("devtools")
 devtools::install_github("richie-ma/pricediscovery")
 library(pricediscovery)
@@ -47,11 +54,11 @@ I use a sample dataset for BTC-USD trade prices from five major cryptocurrecny e
 ### Data resampling
 Let's resample every market data to 1-second frequency and then merge all together.
 
-``` {r}
+``` {r, cache=TRUE}
 
 ### using the test datasets
 library(ggplot2)
-
+library(pricediscovery)
 kraken <- readRDS(testthat::test_path("btcusd_kraken.rds"))[, .(time, kraken=price)]
 gemini <- readRDS(testthat::test_path("btcusd_gemini.rds"))[, .(time, gemini=price)]
 coinbase <- readRDS(testthat::test_path("btcusd_coinbase.rds"))[, .(time, coinbase=price)]
@@ -98,7 +105,7 @@ $$
 \end{bmatrix}
 $$
 
-```{r}
+```{r,  cache=TRUE}
 price_discovery_measures <- price_discovery(mkt_data_1s, 
                                             num_market = 5,
                                             price_columns = c("KRAKEN", 
@@ -117,9 +124,9 @@ price_discovery_measures
 ```
 I find that 
 
-- In terms of efficiency, measuring which market price is more informative about common efficient price:  Coinbase contributes the most to the common efficient price with information shares ($IS$s) reaching to 65.94%, followed by Bitfinex (25.54%) and Bitstamp (7.17%).
+- In terms of efficiency, measuring which market price is more informative about common efficient price:  Coinbase contributes the most to the common efficient price with information shares (ISs) reaching to 65.94%, followed by Bitfinex (25.54%) and Bitstamp (7.17%).
 
-- In terms of timeliness, measuring which market incorporates the new information faster: Based on information leadership shares ($ILS$s), Bitstamp is the first one to incorporate new information into prices, followed by Gemini, and Kraken. 
+- In terms of timeliness, measuring which market incorporates the new information faster: Based on information leadership shares (ILSs), Bitstamp is the first one to incorporate new information into prices, followed by Gemini, and Kraken. 
 
 - This exercise suggests that the timeliness and efficiency of price discovery might not occur in the same market. 
 
