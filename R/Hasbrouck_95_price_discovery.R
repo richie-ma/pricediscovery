@@ -140,7 +140,7 @@ price_discovery <- function(data,
         r = num_market - 1,
         include = "none",
         beta = beta,
-        estim = "ML",
+        estim = "2OLS",
         LRinclude = "none"
       )
 
@@ -151,7 +151,7 @@ price_discovery <- function(data,
         r = num_market - 1,
         include = "none",
         beta = beta,
-        estim = "ML",
+        estim = "2OLS",
         LRinclude = "none"
       )
 
@@ -164,7 +164,7 @@ price_discovery <- function(data,
         r = num_market - 1,
         include = "none",
         beta = NULL,
-        estim = "ML",
+        estim = "2OLS",
         LRinclude = "none"
       )
 
@@ -175,7 +175,7 @@ price_discovery <- function(data,
         r = num_market - 1,
         include = "none",
         beta = NULL,
-        estim = "ML",
+        estim = "2OLS",
         LRinclude = "const"
       )
 
