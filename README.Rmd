@@ -119,18 +119,9 @@ price_discovery_measures <- price_discovery(mkt_data_1s,
                                             lag_select_ceritera = 'SC',
                                             coin_const = TRUE,
                                             coin_beta = TRUE)
-price_discovery_measures                                             
+price_discovery_measures
                                             
 ```
-I find that 
-
-- In terms of efficiency, measuring which market price is more informative about common efficient price:  Coinbase contributes the most to the common efficient price with information shares (ISs) reaching to 65.94%, followed by Bitfinex (25.54%) and Bitstamp (7.17%).
-
-- In terms of timeliness, measuring which market incorporates the new information faster: Based on information leadership shares (ILSs), Bitstamp is the first one to incorporate new information into prices, followed by Gemini, and Kraken. 
-
-- This exercise suggests that the timeliness and efficiency of price discovery might not occur in the same market. 
-
-- CS typically shows a similar pattern as ILS.
 
 ## References
 

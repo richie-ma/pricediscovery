@@ -58,7 +58,7 @@ price_discovery <- function(data,
   }
 
 
-  if (lag_selection) {
+  if (isTRUE(lag_selection)) {
     if (is.null(vecm_max.lag)) {
       stop("The maximum lag number for VECM is needed. Insert any positive numbers.")
     }
@@ -70,7 +70,7 @@ price_discovery <- function(data,
   }
 
 
-  if (log_price) {
+  if (isTRUE(log_price)) {
     data <- data[, lapply(.SD, log), .SDcols = price_columns]
   }
 
@@ -85,16 +85,16 @@ price_discovery <- function(data,
   ## If users do not specify the beta cointegrating vector, we will estimate directly.
   ## However, we do not let users estimate the information shares.
 
-  if (coin_beta) {
+  if (isTRUE(coin_beta)) {
     if (num_market == 2) {
       beta = 1
     } else{
       beta <- t(cbind(
-        matrix(ncol = 1, nrow = num_market - 1, 1),
+        matrix(1, nrow = num_market - 1, ncol = 1),
         matrix = -diag(num_market - 1)
       ))
     }
-    if (coin_const) {
+    if (isTRUE(coin_const)) {
       for (a in 2:length(price_columns)) {
         data <-  data[, (paste0("ect_", a)) := mean(get(price_columns[1]) - get(price_columns[a]))]
         data <- data[, (price_columns[a]) := get(price_columns[a]) + get(paste0("ect_", a))]
@@ -105,7 +105,7 @@ price_discovery <- function(data,
 
     }
 
-    if (lag_selection) {
+    if (isTRUE(lag_selection)) {
       var <- VARselect(
         data[, price_columns, with = FALSE],
         lag.max = vecm_max.lag,
@@ -134,7 +134,7 @@ price_discovery <- function(data,
 
       vecm <- VECM(
         data,
-        lag = var.lag,
+        lag = ifelse(var.lag > 1, var.lag - 1, 1),
         r = num_market - 1,
         include = "none",
         beta = beta,
@@ -253,15 +253,20 @@ price_discovery <- function(data,
       x / rowSums(PhiInf)[1]
     }), .SDcols = price_columns][, type := "PT"]
 
-    ILS <- rbind(IS, PT)
-    ILS <- rbind (ILS, (ILS[1, 1:num_market] / ILS[2, 1:num_market])^2, fill =
+    CS <- PhiInf[1, lapply(.SD, function(x) {
+      abs(x) / rowSums(abs(PhiInf))[1]
+    }), .SDcols = price_columns][, type := "CS"]
+
+    ILS <- rbind(IS, CS)
+    ILS <- rbind (ILS, (ILS[1, 1:num_market] / ILS[2, 1:num_market]), fill =
                     TRUE)
 
+    deno <- rowSums((ILS[, 1:num_market])^2)[3]
+
     ILS[3, 1:num_market] <- ILS[3, lapply(.SD, function(x) {
-      x / rowSums(ILS[, 1:num_market])[3]
+      x^2 / deno
     }), .SDcols = price_columns]
     ILS[3, type := "ILS"]
-    ILS <- ILS[!type == 'PT']
 
   } else{
     stop(
@@ -271,14 +276,12 @@ price_discovery <- function(data,
 
   ### We have component share as the VMA coefficient in PhiInf matrix
 
-  CS <- PhiInf[1, lapply(.SD, function(x) {
-    abs(x) / rowSums(abs(PhiInf))[1]
-  }), .SDcols = price_columns][, type := "CS"]
+
 
 
   #############################
 
-  info.shares <- rbind(ILS, CS, fill = TRUE)
+  info.shares <- ILS
 
   return(info.shares)
 

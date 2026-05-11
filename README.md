@@ -152,31 +152,14 @@ price_discovery_measures <- price_discovery(mkt_data_1s,
                                             lag_select_ceritera = 'SC',
                                             coin_const = TRUE,
                                             coin_beta = TRUE)
-price_discovery_measures                                             
-#>        KRAKEN      GEMINI   COINBASE   BITSTAMP   BITFINEX   type
-#>         <num>       <num>      <num>      <num>      <num> <char>
-#> 1: 0.02714113 0.016423008 0.62937209 0.07165127 0.25541250     IS
-#> 2: 0.06016415 0.115946639 0.02385562 0.77070333 0.02933026    ILS
-#> 3: 0.01905584 0.008306015 0.70174812 0.01405560 0.25683443     CS
+price_discovery_measures
+#>        KRAKEN     GEMINI  COINBASE   BITSTAMP   BITFINEX   type
+#>         <num>      <num>     <num>      <num>      <num> <char>
+#> 1: 0.02587861 0.01578082 0.6346416 0.07312503 0.25057398     IS
+#> 2: 0.01144035 0.01188435 0.7054792 0.02150276 0.24969334     CS
+#> 3: 0.25254256 0.08702411 0.0399411 0.57078844 0.04970378    ILS
+#> 4: 0.01144035 0.01188435 0.7054792 0.02150276 0.24969334     CS
 ```
-
-I find that
-
-- In terms of efficiency, measuring which market price is more
-  informative about common efficient price: Coinbase contributes the
-  most to the common efficient price with information shares (ISs)
-  reaching to 65.94%, followed by Bitfinex (25.54%) and Bitstamp
-  (7.17%).
-
-- In terms of timeliness, measuring which market incorporates the new
-  information faster: Based on information leadership shares (ILSs),
-  Bitstamp is the first one to incorporate new information into prices,
-  followed by Gemini, and Kraken.
-
-- This exercise suggests that the timeliness and efficiency of price
-  discovery might not occur in the same market.
-
-- CS typically shows a similar pattern as ILS.
 
 ## References
 
