@@ -105,7 +105,8 @@ $$
 \end{bmatrix}
 $$
 
-```{r,  cache=TRUE}
+```{r}
+
 price_discovery_measures <- price_discovery(mkt_data_1s, 
                                             num_market = 5,
                                             price_columns = c("KRAKEN", 

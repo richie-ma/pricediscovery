@@ -139,6 +139,7 @@ $$\begin{bmatrix}
 \end{bmatrix}$$
 
 ``` r
+
 price_discovery_measures <- price_discovery(mkt_data_1s, 
                                             num_market = 5,
                                             price_columns = c("KRAKEN", 
@@ -153,12 +154,7 @@ price_discovery_measures <- price_discovery(mkt_data_1s,
                                             coin_const = TRUE,
                                             coin_beta = TRUE)
 price_discovery_measures
-#>        KRAKEN     GEMINI  COINBASE   BITSTAMP   BITFINEX   type
-#>         <num>      <num>     <num>      <num>      <num> <char>
-#> 1: 0.02587861 0.01578082 0.6346416 0.07312503 0.25057398     IS
-#> 2: 0.01144035 0.01188435 0.7054792 0.02150276 0.24969334     CS
-#> 3: 0.25254256 0.08702411 0.0399411 0.57078844 0.04970378    ILS
-#> 4: 0.01144035 0.01188435 0.7054792 0.02150276 0.24969334     CS
+                                            
 ```
 
 ## References
