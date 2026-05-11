@@ -71,9 +71,9 @@ price_discovery <- function(data,
 
 
   if (isTRUE(log_price)) {
-    data <- data[, lapply(.SD, log), .SDcols = price_columns]
+    data <- data[, lapply(.SD, function(x) log(as.numeric(x))), .SDcols = price_columns]
   }else{
-    data <- data[, ..price_columns]
+    data <- data[, lapply(.SD, as.numeric), .SDcols = price_columns]
   }
 
 
